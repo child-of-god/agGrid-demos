@@ -1,0 +1,17 @@
+/* Styles go here */
+
+body {
+    height: 100%;
+    width:100%;
+}
+.ag-cell {
+    overflow: visible;
+}
+
+.dropdown-menu {
+  width:100%;
+}
+
+.typeahead {
+  z-index: 1051;
+}
