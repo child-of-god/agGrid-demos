@@ -1,0 +1,9 @@
+/* Styles go here */
+
+body {
+    height: 100%;
+}
+
+.ag-cell {
+    overflow: visible;
+}
