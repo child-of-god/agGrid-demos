@@ -1,0 +1,107 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
+  <link href="lib/style.css" rel="stylesheet">
+  <title>F&r and Bulk Update demo</title>
+</head>
+
+<body style="width:100%">
+  <div style="width:100%">
+    <a href="#" data-toggle="modal" style="float: right" data-target="#updateModal">Find and Replace</a>
+  </div><br>
+
+  <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal header Starts-->
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                         </button>
+          <h4 class="modal-title" id="updateModal">Find & Replace</h4>
+        </div>
+        <!-- Modal header Ends-->
+
+        <!-- Modal Body  Starts-->
+        <div class="modal-body">
+          <div role="tabpanel">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="#findAndReplace" aria-controls="findAndReplaceTab" role="tab" data-toggle="tab">Find & Replace</a>
+              </li>
+              <li role="presentation"><a href="#bulkUpdate" aria-controls="bulkUpdate" role="tab" data-toggle="tab">Bulk Update</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+
+              <!-- Find & Replace Tab Contents Start-->
+              <div role="tabpanel" class="tab-pane active" id="findAndReplace">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" style="margin: 5px;">Attribute</label>
+                  <div id="attrOptionsWrapper">
+                    <select id="attrOptions" class="modal-select" style="width:50%">
+                            
+                         </select>
+                  </div>
+                  <br>
+                  <label for="findVal" class="col-sm-2 control-label">Find</label>
+                  <div class="col-sm-10" style="width:60%">
+                    <input type="text" class="form-control" id="findVal">
+                  </div><br><br>
+                  <label for="replaceVal" class="col-sm-2 control-label">Replace With</label>
+                  <div class="col-sm-10" style="width:60%">
+                    <input type="text" id="replaceVal" class="form-control" id="replaceVal">
+                  </div><br><br>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="button" id="replaceAll" data-dismiss="modal" class="btn btn-primary save">Replace All</button>
+                </div>
+              </div>
+              <!-- Find & Replace Tab Contents End-->
+
+              <!-- Bulk Update Tab Contents Start-->
+              <div role="tabpanel" class="tab-pane" id="bulkUpdate">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" style="margin: 5px;">Attribute</label>
+                  <div>
+                    <select id="bulkAttrOptions" class="modal-select" style="width:50%">
+                            
+                    </select>
+                  </div>
+                  <br>
+                  <label for="replaceVal" class="col-sm-2 control-label">Replace With</label>
+                  <div class="col-sm-10" style="width:60%">
+                    <input type="text" class="form-control" id="bulkReplaceVal">
+                  </div><br><br>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="button" id="updateAll" data-dismiss="modal" class="btn btn-primary save">Update All</button>
+                </div>
+              </div>
+
+            </div>
+            <!-- Bulk Update Tab Contents End-->
+          </div>
+        </div>
+      </div>
+      <!-- Modal Body  Ends-->
+    </div>
+  </div>
+  </div>
+
+  <!-- Grid Starts -->
+  <div id="myGrid" style="height: 100%;" class="ag-fresh"></div>
+  <!-- Grid Ends -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ag-grid/12.0.2/ag-grid.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+  <script src="lib/script.js"></script>
+</body>
+
+</html>
