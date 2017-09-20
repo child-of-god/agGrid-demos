@@ -95,19 +95,7 @@ function getRowData(records) {
   });
   return rowData;
 }
-//Logic for find field match styling
-/* function setColumnsRenderer(columns, records, findVal) {
-  
-  _.forEach(columns, function (column) {
-    _.forEach(records, function (record, key) {
-      console.log(record['city']); // 'city' should be replaced with attribute drop down value.
-      if(record['city'] === findVal) {
-        column.cellStyle = {color: 'red', 'background-color': 'green'};
-      }
-    });
-    
-  });
-} */
+
 function findAndReplace() {
   var rowDataArray = gridOptions.rowData;
   var columns = gridOptions.columnApi.getAllColumns();

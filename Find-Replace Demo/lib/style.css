@@ -33,8 +33,7 @@ body {
 
 }
 .modal-select {
-  display: block;
-  width: 70%;
+  width: 55%;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
