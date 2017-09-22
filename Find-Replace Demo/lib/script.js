@@ -1,5 +1,3 @@
-// Code goes here
-
 
 //columns
 var columns = {
@@ -10,11 +8,19 @@ var columns = {
   },
   country: {
     headerName: 'Country',
-    editable: true
+    editable: true,
+    findReplaceAllowed: true,
+    bulkUpdateAllowed: true
   },
   continent: {
     headerName: 'Continent',
-    editable: true
+    editable: true,
+    findReplaceAllowed: true,
+    bulkUpdateAllowed: true,
+    cellEditor:'select',
+    cellEditorParams: {
+      values:['Europe', 'North America', 'Asia']
+    }
   }
 };
 
@@ -96,17 +102,59 @@ function getRowData(records) {
   return rowData;
 }
 
+
+/* Selection Handler */
+function onSelectionChanged() {
+  var findDataOptions = [];
+  var replaceDataOptions = [];
+  var bulkReplaceOptions = [];
+   selectedRows = gridOptions.api.getSelectedRows();
+   var rowDataArray = selectedRows ? selectedRows : gridOptions.rowData;
+   var selectedAttribute = $("select#attrOptions option:checked").val();
+   _.forEach(rowDataArray, function (value) {
+     findDataOptions.push(value[selectedAttribute]);
+   });
+   findDataOptions = _.uniq(findDataOptions);
+   _.forEach(rowDataArray, function (value) {
+     replaceDataOptions.push(value[selectedAttribute]);
+   });
+   replaceDataOptions = _.uniq(replaceDataOptions);
+
+   _.forEach(rowDataArray, function (value) {
+     bulkReplaceOptions.push(value[selectedAttribute]);
+   });
+   bulkReplaceOptions = _.uniq(bulkReplaceOptions);
+   $('#findVal').typeahead({ source: findDataOptions });
+   $('#replaceVal').typeahead({ source: replaceDataOptions });
+   $('#bulkReplaceVal').typeahead({ source: bulkReplaceOptions });
+}
+
+/* replaceUtils */
+
+var _replaceUtils = {
+    replaceAll : function() {
+        
+    
+    },
+}
+
+
+
 function findAndReplace() {
   var rowDataArray = gridOptions.rowData;
-  var columns = gridOptions.columnApi.getAllColumns();
   var e = document.getElementById("attrOptions");
   var value = e.options[e.selectedIndex].value;
   var columnName = e.options[e.selectedIndex].text;
   var findColumnValue = document.getElementById('findVal').value;
-  var replaceColumnValue = document.getElementById('replaceVal').value;
+  var selectedCol = document.getElementById("replaceSelectValues");
+  var value = selectedCol.options[selectedCol.selectedIndex].value;
+  var replaceColumnValue = selectedCol.options[selectedCol.selectedIndex].text;
+  var replaceColValue = document.getElementById('replaceVal').value;
+  var replaceValue = replaceColumnValue ? replaceColumnValue: replaceColValue; // BUG HERE
+
   _.forEach(rowDataArray, function (rowData, key) {
     if (rowData[columnName] === findColumnValue) {
-        rowDataArray[key][columnName] = replaceColumnValue;
+        rowDataArray[key][columnName] = replaceValue;
     };
     gridOptions.api.setRowData(rowDataArray);
     gridOptions.api.redrawRows();
@@ -115,10 +163,14 @@ function findAndReplace() {
 }
 
 function bulkUpdate() {
-  var rowDataArray = gridOptions.rowData;
+  var rowDataArray =  gridOptions.rowData;
   var e = document.getElementById("bulkAttrOptions");
   var value = e.options[e.selectedIndex].value;
   var columnName = e.options[e.selectedIndex].text;
+  _.forEach(gridData, function (value) {
+    bulkReplaceOptions.push(value[selectedAttribute]);
+  });
+  bulkReplaceOptions = _.uniq(bulkReplaceOptions);
   var replaceColumnValue = document.getElementById('bulkReplaceVal').value;
   _.forEach(rowDataArray, function (rowData, key) {
     rowDataArray[key][columnName] = replaceColumnValue;
@@ -130,40 +182,43 @@ function bulkUpdate() {
 
 var gridOptions = {
   columnDefs: getColumnDefs(columns),
+  rowSelection: 'multiple',
   rowData: getRowData(records),
   onGridReady: function (params) {
-
     var gridData = gridOptions.rowData;
+    var columnData = gridOptions.columnDefs;
     var attributeValues = [];
-    var columData = gridOptions.columnDefs;
-    _.forEach(columData, function (value) {
-      attributeValues.push(value.field);
-    });
     var findDataOptions = [];
     var replaceDataOptions = [];
     var bulkReplaceOptions = [];
-    /* Creating the attributes drop down dynamically : PENDING*/
-    /* F & R dropdown */
-    //var optionValues = [[1, "city"], [2, "country"]];
+
+    /* Creating the attributes list drop down dynamically */
+
+    /* F & R */
     var $select = $('#attrOptions');
     $select.find('option').remove();
-    for (var i = 0; i < attributeValues.length; i++) {
-      $('#attrOptions').append($("<option></option>").val(attributeValues[i]).text(attributeValues[i]))
+    for (var i = 0; i < columnData.length; i++) {
+      if(columnData[i].findReplaceAllowed) {
+        $('#attrOptions').append($("<option></option>").val(columnData[i].field).text(columnData[i].field));
+      }
     }
-
+    /* Bulk Update */
     var $select = $('#bulkAttrOptions');
     $select.find('option').remove();
-    for (var i = 0; i < attributeValues.length; i++) {
-      $('#bulkAttrOptions').append($("<option></option>").val(attributeValues[i]).text(attributeValues[i]))
+    for (var i = 0; i < columnData.length; i++) {
+      if(columnData[i].bulkUpdateAllowed) {
+        $('#bulkAttrOptions').append($("<option></option>").val(columnData[i].field).text(columnData[i].field))
+      }
     }
-    var selectedAttribute = $("select#attrOptions option:checked").val();
-    /* fetch selected attribute for F & R */
 
+   
+  
+    var selectedAttribute = $("select#attrOptions option:checked").val();
     _.forEach(gridData, function (value) {
       findDataOptions.push(value[selectedAttribute]);
     });
     findDataOptions = _.uniq(findDataOptions);
-
+  
     _.forEach(gridData, function (value) {
       replaceDataOptions.push(value[selectedAttribute]);
     });
@@ -175,25 +230,45 @@ var gridOptions = {
     bulkReplaceOptions = _.uniq(bulkReplaceOptions);
 
     /*  Generate type ahead data for find , replace fields : F & R */
-
+  
     $('#findVal').typeahead({ source: findDataOptions });
     $('#replaceVal').typeahead({ source: replaceDataOptions });
     $('#bulkReplaceVal').typeahead({ source: bulkReplaceOptions });
+
     /* Change event for dropdowns : findDataOptions and replaceDataOptions needs to be recalculated */
     $("#attrOptions").change(function () {
       findDataOptions.length = 0;
       replaceDataOptions.length = 0;
-      selectedAttribute = $("select#attrOptions option:checked").val();
+
+      var selectedAttribute = $("select#attrOptions option:checked").val();
+      
       _.forEach(gridData, function (value) {
         findDataOptions.push(value[selectedAttribute]);
       });
       findDataOptions = _.uniq(findDataOptions);
-      
 
       _.forEach(gridData, function (value) {
         replaceDataOptions.push(value[selectedAttribute]);
       });
       replaceDataOptions = _.uniq(replaceDataOptions);
+
+      /* Populate the drop down list for columns which are dropdown */
+      
+      for (var i = 0; i < columnData.length; i++) {
+        if(columnData[i].field === selectedAttribute && columnData[i].cellEditor === 'select') {
+          $('#replaceVal').hide();
+          $('#replaceSelectValues').show();
+
+          _.forEach(gridData, function (value) {
+            $('#replaceSelectValues').append($("<option></option>").val(value[selectedAttribute]).text(value[selectedAttribute]));
+          });
+       
+        } else {
+          $('#replaceVal').show();
+          $('#replaceSelectValues').hide();
+        }
+      }
+      
 
       $('#findVal').typeahead('destroy');
       $('#replaceVal').typeahead('destroy');
@@ -204,13 +279,13 @@ var gridOptions = {
 
     $("#bulkAttrOptions").change(function () {
       bulkReplaceOptions.length = 0;
-      selectedAttribute = $("select#bulkAttrOptions option:checked").val();
+      var selectedAttribute = $("select#bulkAttrOptions option:checked").val();
       _.forEach(gridData, function (value) {
         bulkReplaceOptions.push(value[selectedAttribute]);
       });
       bulkReplaceOptions = _.uniq(bulkReplaceOptions);
       $('#bulkReplaceVal').typeahead('destroy');
-      $('#bulkReplaceVal').typeahead({ source: replaceDataOptions });
+      $('#bulkReplaceVal').typeahead({ source: bulkReplaceOptions });
     });
 
 

@@ -15,7 +15,7 @@
     <a href="#" data-toggle="modal" style="float: right" data-target="#updateModal">Find and Replace</a>
   </div><br>
 
-  <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <!-- Modal header Starts-->
@@ -42,11 +42,10 @@
               <div role="tabpanel" class="tab-pane active" id="findAndReplace">
                 <div class="form-group">
                   <label class="col-sm-2 control-label" style="margin: 5px;">Attribute</label>
-                  <div id="attrOptionsWrapper">
-                    <input list="attrOptions" class="modal-select">
-                    <datalist id="attrOptions" class="modal-select" style="width:50%">
+                  <div>
+                    <select id="attrOptions" class="modal-select" style="width:50%">
                             
-                    </datalist>
+                    </select>
                   </div>
                   <br>
                   <label for="findVal" class="col-sm-2 control-label">Find</label>
@@ -55,7 +54,10 @@
                   </div><br><br>
                   <label for="replaceVal" class="col-sm-2 control-label">Replace With</label>
                   <div class="col-sm-10" style="width:60%">
-                    <input type="text" id="replaceVal" class="form-control" id="replaceVal">
+                    <input type="text" id="replaceVal" class="form-control" >
+                    <select id="replaceSelectValues" class="modal-select" style="width:100%;display: none">
+                       
+                    </select>
                   </div><br><br>
                 </div>
 
@@ -76,7 +78,7 @@
                     </select>
                   </div>
                   <br>
-                  <label for="replaceVal" class="col-sm-2 control-label">Replace With</label>
+                  <label for="bulkReplaceVal" class="col-sm-2 control-label">Replace With</label>
                   <div class="col-sm-10" style="width:60%">
                     <input type="text" class="form-control" id="bulkReplaceVal">
                   </div><br><br>
