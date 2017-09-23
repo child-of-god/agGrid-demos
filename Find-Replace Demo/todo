@@ -1,0 +1,32 @@
+
+
+// Fix the F & R bug  - DONE , do regression!
+//Re- design the modal with Prev and Next Buttons.
+
+
+
+/* Selection Handler : backup */
+function onSelectionChanged() {
+  var findDataOptions = [];
+  var replaceDataOptions = [];
+  var bulkReplaceOptions = [];
+   selectedRows = gridOptions.api.getSelectedRows();
+   var rowDataArray = selectedRows ? selectedRows : gridOptions.rowData;
+   var selectedAttribute = $("select#attrOptions option:checked").val();
+   _.forEach(rowDataArray, function (value) {
+     findDataOptions.push(value[selectedAttribute]);
+   });
+   findDataOptions = _.uniq(findDataOptions);
+   _.forEach(rowDataArray, function (value) {
+     replaceDataOptions.push(value[selectedAttribute]);
+   });
+   replaceDataOptions = _.uniq(replaceDataOptions);
+
+   _.forEach(rowDataArray, function (value) {
+     bulkReplaceOptions.push(value[selectedAttribute]);
+   });
+   bulkReplaceOptions = _.uniq(bulkReplaceOptions);
+   $('#findVal').typeahead({ source: findDataOptions });
+   $('#replaceVal').typeahead({ source: replaceDataOptions });
+   $('#bulkReplaceVal').typeahead({ source: bulkReplaceOptions });
+}
